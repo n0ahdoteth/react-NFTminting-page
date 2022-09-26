@@ -10,7 +10,7 @@ import detectEthereumProvider from '@metamask/detect-provider';
 
 const App = () => {
 
-  const CONTRACT_ADDRESS = "0x7EEbAd95c7cA14238D7Bdd237220Ee92EaEA97Cb"
+  const CONTRACT_ADDRESS = "0xF53a72973244580E0c92CC5CB640916d4499EF07"
 
   const [currentAccount, setCurrentAccount] = useState("");
   const [supplyCount, setSupplyCount] = useState(0);
@@ -77,7 +77,7 @@ const App = () => {
     }
   }
 
-  const handleNetworkSwitch = async () => {
+  const handleNetworkSwitch = async () => { 
     setError();
     await changeNetwork();
     seeNetwork();
