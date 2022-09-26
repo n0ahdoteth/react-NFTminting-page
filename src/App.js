@@ -1,5 +1,5 @@
 import './App.css';
-import { useState, useEffect } from 'react';import MintPanel from './components/MintPanel';
+import { useState, useEffect } from 'react';
 import Header from './components/Header';
 import onChainNoah from './utils/OnChainNoah.json'
 import {ethers} from 'ethers';
@@ -7,10 +7,11 @@ import MintButtons from './components/MintButtons';
 import Web3 from 'web3';
 import detectEthereumProvider from '@metamask/detect-provider';
 
-const CONTRACT_ADDRESS = "0x7EEbAd95c7cA14238D7Bdd237220Ee92EaEA97Cb"
 
 const App = () => {
-  
+
+  const CONTRACT_ADDRESS = "0x7EEbAd95c7cA14238D7Bdd237220Ee92EaEA97Cb"
+
   const [currentAccount, setCurrentAccount] = useState("");
   const [supplyCount, setSupplyCount] = useState(0);
   const [mintCount, setMintCount] = useState(1);
@@ -34,9 +35,9 @@ const App = () => {
       setMintCount(mintCount -1)
     }
   }
+
   const changeNetwork = async () => {
     try{
-      
       if (!ethereum) throw new Error("No crypto wallet found");
       await ethereum.request({
         method: "wallet_switchEthereumChain",
@@ -59,12 +60,28 @@ const App = () => {
     } else {
       setIsOnGoerli(false);
     }
+    displaySupply();
+  }
+
+  const displaySupply = async() =>{
+    try{
+      if(ethereum){
+        const connectedContract = new ethers.Contract(CONTRACT_ADDRESS, onChainNoah.abi, signer);
+        let supply = await (connectedContract.totalSupply());
+        setSupplyCount(supply.toNumber());
+      } else {
+        console.log("Eth obj doesn't exist");
+      }
+    } catch (error){
+      console.log(error);
+    }
   }
 
   const handleNetworkSwitch = async () => {
     setError();
     await changeNetwork();
     seeNetwork();
+    await displaySupply();
   }
 
   const mint = async () => {
@@ -96,32 +113,15 @@ const App = () => {
     }
   }
 
-  const displaySupply = async() =>{
-    try{
-      if(ethereum){
-        const connectedContract = new ethers.Contract(CONTRACT_ADDRESS, onChainNoah.abi, signer);
-        let supply = await (connectedContract.totalSupply());
-        setSupplyCount(supply.toNumber());
-      } else {
-        console.log("Eth obj doesn't exist");
-      }
-    } catch (error){
-      console.log(error);
-    }
-  }
-
   useEffect(()=>{
     displaySupply();
-  }, [2])
+  }, [isOnGoerli])
    
   return (
     <div className="App">
           <Header />
 
-
         {currentAccount && !isOnGoerli ? (<button onClick={handleNetworkSwitch}>Switch to Goerli</button>) : null }
-          
-          
           {currentAccount === "" ? (
                 <button onClick={connectWallet}>Connect to Wallet</button>
           ) : (
