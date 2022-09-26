@@ -10,7 +10,7 @@ import detectEthereumProvider from '@metamask/detect-provider';
 
 const App = () => {
 
-  const CONTRACT_ADDRESS = "0xF53a72973244580E0c92CC5CB640916d4499EF07"
+  const CONTRACT_ADDRESS = "0x92778ca8De2034C8B87624c0C7BA0AcF6C3900B7"
 
   const [currentAccount, setCurrentAccount] = useState("");
   const [supplyCount, setSupplyCount] = useState(0);
@@ -87,7 +87,7 @@ const App = () => {
   const mint = async () => {
     try {
         if (ethereum) {
-            let nftTxn = await connectedContract.mint(mintCount);
+            let nftTxn = await connectedContract.mint();
             await nftTxn.wait();
             console.log(`Minted, https://goerli.etherscan.io/tx/${nftTxn.hash}`);
         } else {

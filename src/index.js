@@ -3,27 +3,19 @@ import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
-import { Web3ReactProvider } from '@web3-react/core'
-import Web3 from 'web3'
 import {BrowserRouter, Routes, Route} from 'react-router-dom';
 import About from './components/routes/About';
 
-function getLibrary(provider) {
-  return new Web3(provider)
-}
 
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
-  <Web3ReactProvider getLibrary={getLibrary}>
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<App />} />
         <Route path="about" element={<About />} />
       </Routes>
     </BrowserRouter>
-  </Web3ReactProvider>,
-  // root
    
 );
 
