@@ -5,6 +5,7 @@ import onChainNoah from './utils/OnChainNoah.json'
 import {ethers} from 'ethers';
 import MintButtons from './components/MintButtons';
 import Web3 from 'web3';
+import detectEthereumProvider from '@metamask/detect-provider';
 
 const CONTRACT_ADDRESS = "0x7EEbAd95c7cA14238D7Bdd237220Ee92EaEA97Cb"
 
@@ -14,6 +15,7 @@ const App = () => {
   const [supplyCount, setSupplyCount] = useState(0);
   const [mintCount, setMintCount] = useState(1);
   const [error, setError] = useState();
+  const [isOnGoerli, setIsOnGoerli] = useState();
   
   const {ethereum} = window;
   const provider = new ethers.providers.Web3Provider(ethereum);
@@ -34,6 +36,7 @@ const App = () => {
   }
   const changeNetwork = async () => {
     try{
+      
       if (!ethereum) throw new Error("No crypto wallet found");
       await ethereum.request({
         method: "wallet_switchEthereumChain",
@@ -48,9 +51,20 @@ const App = () => {
     }
   }
 
+  const seeNetwork = async () => {
+    const provider = await detectEthereumProvider();
+    const chainIdTest = await provider.request({ method: 'eth_chainId' })
+    if(chainIdTest == 5){
+      setIsOnGoerli(true);
+    } else {
+      setIsOnGoerli(false);
+    }
+  }
+
   const handleNetworkSwitch = async () => {
     setError();
     await changeNetwork();
+    seeNetwork();
   }
 
   const mint = async () => {
@@ -71,10 +85,12 @@ const App = () => {
     try {
       if (!ethereum) {
         alert("Get MetaMask!")
+        seeNetwork();
         return;
       }
       const accounts = await ethereum.request({ method: "eth_requestAccounts" });
       setCurrentAccount(accounts[0]);
+      seeNetwork();
     } catch (error) {
       console.log(error);
     }
@@ -96,13 +112,15 @@ const App = () => {
 
   useEffect(()=>{
     displaySupply();
-  }, [])
+  }, [2])
    
   return (
     <div className="App">
           <Header />
 
-          <button onClick={handleNetworkSwitch}>Switch to Goerli</button>
+
+        {currentAccount && !isOnGoerli ? (<button onClick={handleNetworkSwitch}>Switch to Goerli</button>) : null }
+          
           
           {currentAccount === "" ? (
                 <button onClick={connectWallet}>Connect to Wallet</button>
