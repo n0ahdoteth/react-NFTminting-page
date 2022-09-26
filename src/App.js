@@ -10,7 +10,7 @@ import detectEthereumProvider from '@metamask/detect-provider';
 
 const App = () => {
 
-  const CONTRACT_ADDRESS = "0x92778ca8De2034C8B87624c0C7BA0AcF6C3900B7"
+  const CONTRACT_ADDRESS = "0x5C1Bf733190A3bA3B706Ea95A98453d0c195D9be"
 
   const [currentAccount, setCurrentAccount] = useState("");
   const [supplyCount, setSupplyCount] = useState(0);
@@ -133,9 +133,7 @@ const App = () => {
           {currentAccount ? (
              <MintButtons 
               mint={mint} 
-              addMint={addMint} 
-              subMint={subMint} 
-              mintCount={mintCount} 
+             
             />
           ) : null}
     </div>
